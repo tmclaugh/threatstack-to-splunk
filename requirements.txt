@@ -4,4 +4,5 @@ flask-lambda
 gevent
 gunicorn
 requests
-splunk-sdk
+#splunk_handler
+-e git+https://github.com/tmclaugh/splunk_handler.git@configure_record_time#egg=splunk_handler
