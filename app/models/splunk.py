@@ -66,6 +66,8 @@ class SplunkModel(object):
         while True:
             if splunk_handler.queue.empty():
                 break
+            else:
+                time.sleep(1)
 
         timer = 0
         while timer < splunk_timeout:
