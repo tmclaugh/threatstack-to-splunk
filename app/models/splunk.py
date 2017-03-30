@@ -4,7 +4,9 @@ from app.errors import AppBaseError
 import config
 import json
 import logging
+import six
 from splunk_handler import SplunkHandler
+import time
 
 _logger = logging.getLogger(__name__)
 
@@ -16,10 +18,10 @@ SPLUNK_PORT = config.SPLUNK_PORT
 class SplunkBaseError(AppBaseError):
     '''Base Splunk Exception class'''
 
-class SplunkRequestErrorError(Exception):
+class SplunkRequestError(SplunkBaseError):
     '''Splunk request error'''
 
-class SplunkAPIError(Exception):
+class SplunkAPIError(SplunkBaseError):
     '''Splunk API error'''
 
 class SplunkModel(object):
@@ -40,6 +42,7 @@ class SplunkModel(object):
         return True
 
     def put_alert_event(self, alert, hostname, source):
+        splunk_timeout = 30
         splunk_handler = SplunkHandler(
             host=self.splunk_host,
             port=self.splunk_port,
@@ -50,7 +53,9 @@ class SplunkModel(object):
             sourcetype=self.splunk_source_type,
             verify=self.splunk_verify,
             record_time="__import__('json').loads(record.msg).get('created_at')/1000",
-            flush_interval = 0
+            flush_interval = 0,
+            queue_exceptions = True,
+            timeout=splunk_timeout
         )
         splunk_logger = logging.getLogger('splunk_hec')
         # This is so we don't inherit the root logger config and end up
@@ -58,6 +63,19 @@ class SplunkModel(object):
         splunk_logger.propagate = 0
         splunk_logger.addHandler(splunk_handler)
         splunk_logger.warning(json.dumps(alert))
+
+        while True:
+            if splunk_handler.queue.empty():
+                break
+
+        timer = 0
+        while timer < splunk_timeout:
+            if not splunk_handler.exceptions_queue.empty():
+                e = splunk_handler.exceptions_queue.get_nowait()
+                raise SplunkRequestError(e)
+            else:
+                timer += 2
+                time.sleep(2)
 
         return
 

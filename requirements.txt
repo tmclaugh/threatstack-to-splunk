@@ -5,4 +5,4 @@ gevent
 gunicorn
 requests
 #splunk_handler
--e git+https://github.com/tmclaugh/splunk_handler.git@configure_record_time#egg=splunk_handler
+-e git+https://github.com/tmclaugh/splunk_handler.git@exception_queue_full#egg=splunk_handler
