@@ -53,6 +53,9 @@ class SplunkModel(object):
             flush_interval = 0
         )
         splunk_logger = logging.getLogger('splunk_hec')
+        # This is so we don't inherit the root logger config and end up
+        # printing the alert to the log file of the app.
+        splunk_logger.propagate = 0
         splunk_logger.addHandler(splunk_handler)
         splunk_logger.warning(json.dumps(alert))
 
