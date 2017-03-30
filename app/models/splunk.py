@@ -4,7 +4,6 @@ from app.errors import AppBaseError
 import config
 import json
 import logging
-import six
 from splunk_handler import SplunkHandler
 import time
 
