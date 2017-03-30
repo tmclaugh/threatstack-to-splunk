@@ -18,6 +18,8 @@ def is_available():
     '''
     Test that Threat Stack and Splunk are reachable.
     '''
+    _logger.info('{}: {}'.format(request.method, request.path))
+
     spl = splunk_model.SplunkModel()
     splunk_status = spl.is_available()
     splunk_info = {'success': splunk_status}
@@ -40,6 +42,10 @@ def put_alert():
     '''
     Send Threat Stack alerts to Splunk.
     '''
+    _logger.info('{}: {} - {}'.format(request.method,
+                                      request.path,
+                                      request.data))
+
     webhook_data = request.get_json(force=True)
     for alert in webhook_data.get('alerts'):
         ts = threatstack_model.ThreatStackModel()
