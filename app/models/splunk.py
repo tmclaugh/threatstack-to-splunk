@@ -21,7 +21,7 @@ class SplunkBaseError(AppBaseError):
 class SplunkRequestError(SplunkBaseError):
     '''Splunk request error'''
 
-class SplunkAPIError(SplunkBaseError):
+class SplunkQueueError(SplunkBaseError):
     '''Splunk API error'''
 
 class SplunkModel(object):
@@ -72,7 +72,12 @@ class SplunkModel(object):
         while timer < splunk_timeout:
             if not splunk_handler.exceptions_queue.empty():
                 e = splunk_handler.exceptions_queue.get_nowait()
-                raise SplunkRequestError(e)
+                if e.__class__.__name__ == 'HTTPError':
+                    raise SplunkRequestError(e)
+                elif e.__class__.__name__ == 'Full':
+                    raise SplunkQueueError(e)
+                else:
+                    raise SplunkBaseError(e)
             else:
                 timer += 2
                 time.sleep(2)
