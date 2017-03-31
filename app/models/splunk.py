@@ -36,32 +36,17 @@ class SplunkModel(object):
         self.splunk_token = splunk_token
         self.splunk_ssl_verify = splunk_ssl_verify
 
-    def is_avaialble(self):
-        return True
-
-    def put_alert_event(self,
-                        alert,
-                        hostname,
-                        source,
-                        source_type=SPLUNK_SOURCE_TYPE):
-        # Our timeout needs to be low enough for AWS API Gateway
-        url = '{}/services/collector'.format(self.splunk_base_url)
-
-        splunk_data = {
-            'time': alert.get('created_at')/1000,
-            'host': hostname,
-            'index': 'main',
-            'source': source,
-            'sourcetype': source_type,
-            'event': json.dumps(alert)
-        }
-
+    def _make_splunk_request(self, request_type, path, json_data=None):
+        '''Make requests to splunk'''
+        url = ''.join([self.splunk_base_url, path])
+        headers = {'Authorization':'Splunk {}'.format(self.splunk_token)}
         try:
-            resp = requests.post(
+            resp = requests.request(
+                request_type,
                 url,
-                headers={'Authorization': 'Splunk {}'.format(self.splunk_token)},
+                headers=headers,
                 verify=self.splunk_ssl_verify,
-                json=splunk_data,
+                json=json_data,
             )
 
         except requests.exceptions.RequestException as e:
@@ -86,4 +71,32 @@ class SplunkModel(object):
                 raise SplunkRequestError(resp.reason, resp.status_code)
 
         return resp.json()
+
+
+    def is_available(self):
+        '''Check if Splunk is available'''
+        # This is enough to check connection and token validity
+        path = '/services'
+
+        return self._make_splunk_request('GET', path)
+
+
+    def put_alert_event(self,
+                        alert,
+                        hostname,
+                        source,
+                        source_type=SPLUNK_SOURCE_TYPE):
+        '''Send an alert to Splunk'''
+        path = '/services/collector'
+
+        splunk_data = {
+            'time': alert.get('created_at')/1000,
+            'host': hostname,
+            'index': 'main',
+            'source': source,
+            'sourcetype': source_type,
+            'event': json.dumps(alert)
+        }
+
+        return self._make_splunk_request('POST', path, splunk_data)
 
