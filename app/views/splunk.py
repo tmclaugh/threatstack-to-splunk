@@ -54,11 +54,11 @@ def put_alert():
         source = alert.get('source')
 
         spl = splunk_model.SplunkModel()
-        spl.put_alert_event(alert_full, hostname, source)
+        splunk_resp = spl.put_alert_event(alert_full, hostname, source)
 
     status_code = 200
     success = True
-    response = {'success': success}
+    response = {'success': success, 'splunk': splunk_resp}
 
     return jsonify(response), status_code
 
