@@ -3,7 +3,32 @@ Takes a Threat Stack web hook request and add an event to Splunk.
 
 **NOTE: This code is provided as an example and without support for creating services that use Threat Stack webhooks to perform actions within an environment.**
 
-## Setup
+## Deployment
+This service can be deployed to AWS running on Lambda behind AWS API gateway by clicking "Launch Stack".
+[![Launch CloudFormation
+Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=threatstack-to-splunk&templateURL=https://s3.amazonaws.com/straycat-dhs-org-straycat-lamba-deploys/threatstack-to-splunk.json)
+
+## API
+### POST https://_{host}_/threatstack-to-splunk/api/v1/splunk/event
+Post a JSON doc from Threat Stack and record an event in Splunk.  JSON doc will be in the following format.  __NOTE__: A webhook may contain multiple alerts but this service will store each one individually.
+```
+{
+  "alerts": [
+    {
+      "id": "<alert ID>",
+      "title": "<alert title / description>",
+      "created_at": <time in milliseconds from epoch UTC>,
+      "severity": <severity value>,
+      "organization_id": "<alphanumeric organization ID>",
+      "server_or_region": "<name of host in Threat Stack platform>",
+      "source": "<source type>"
+    }
+  [
+}
+```
+
+## Standalone Setup / Build / Deployment
+### Setup
 Setup will need to be performed for both this service and in Threat Stack.
 
 Set the following environmental variables:
@@ -34,7 +59,7 @@ If performing debugging you may wish to run the app directly instead of via Guni
 python threatstack-to-splunk.py
 ```
 
-## Build
+### Build
 This service uses [Chef Habitat](http://www.habitat.sh) to build deployable packages.  Habitat supports the following package formats natively:
 * Habitat package (.hart)
 * tar
@@ -73,7 +98,7 @@ $ hab studio enter
 [3][default:/src/build:0]# hab pkg export tar tmclaugh/threatstack-to-splunk
 ```
 
-### Starting service.
+#### Starting service.
 If you’re using Docker then follow your typical Docker container deployment steps.  If you’re using a native Habitat package or Habitat tarball then do the following.
 
 * Habitat native package.  (Requires installing Habitat on host.)
@@ -86,24 +111,4 @@ $ sudo hab start tmclaugh-threatstack-to-splunk-{version}-x86_64-linux.hart
 $ sudo tar zxvf {package}.tar.gz -C /
 $ sudo /hab/bin/hab tmclaugh/threatstack-to-splunk
 ```
-
-## API
-### POST https://_{host}_/threatstack-to-splunk/api/v1/splunk/event
-Post a JSON doc from Threat Stack and record an event in Splunk.  JSON doc will be in the following format.  __NOTE__: A webhook may contain multiple alerts but this service will store each one individually.
-```
-{
-  "alerts": [
-    {
-      "id": "<alert ID>",
-      "title": "<alert title / description>",
-      "created_at": <time in milliseconds from epoch UTC>,
-      "severity": <severity value>,
-      "organization_id": "<alphanumeric organization ID>",
-      "server_or_region": "<name of host in Threat Stack platform>",
-      "source": "<source type>"
-    }
-  [
-}
-```
-
 
