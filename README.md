@@ -9,7 +9,7 @@ This service can be deployed to AWS running on Lambda behind AWS API gateway by 
 Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=threatstack-to-splunk&templateURL=https://s3.amazonaws.com/ts-demo-lamba-deploys/threatstack-to-splunk.json)
 
 ## API
-### POST https://_{host}_/threatstack-to-splunk/api/v1/splunk/event
+### POST https://_{host}_/threatstack-to-splunk/api/v1/splunk/alert
 Post a JSON doc from Threat Stack and record an event in Splunk.  JSON doc will be in the following format.  __NOTE__: A webhook may contain multiple alerts but this service will store each one individually.
 ```
 {
