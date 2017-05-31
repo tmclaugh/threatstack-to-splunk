@@ -1,4 +1,5 @@
-# threatstack-to-splunk
+# threatstack-to-splunk [![Build Status](https://travis-ci.org/threatstack/threatstack-to-splunk.svg?branch=master)](https://travis-ci.org/threatstack/threatstack-to-splunk)
+
 Takes a Threat Stack web hook request and add an event to Splunk.
 
 **NOTE: This code is provided as an example and without support for creating services that use Threat Stack webhooks to perform actions within an environment.**
