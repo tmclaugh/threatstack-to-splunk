@@ -18,7 +18,6 @@ deploy:
     secure: k0uMef6gDWxyWLRfJsvT4jljZRXxOUof9S+nqgxYu9PqKMG8NZoGxpaFn48w+pGaP6tEplmNL2kwp+l09Slu6L0gu/8CvxjYwVwwcSeEQbgG5SV3UcyRaUoP3RT/2C9deIzTByiZTVwiJmAoEes1dtA20XQHFAsTDzr54CSpR7TPSQfJiifP+NTuUedPaYrb+jYh4mKg8Mc8zkRSxMwIWl9MKuNj+fSNcO8Xlu7uF0ltzMxzX3gbkNVUM52Dc+pLiiLMAoGfUsU/4HAAxX5/yXWSR2/OFrPFZVgEFhWi16ZgNn8MQdDGqZh8TPgXaGQN1wNiI62VWV5D7n2kAifR0lFvLAC8XTZe6KsYf6vz6pMxJNSQQ9p7dn9JOmOmPd1cIpCk/SrJ93MQoufXn9YDuh2KQQTL/J1jLOhrVUxDjFzA3xNXQ+LriGTyUTFkAdFb6bUj6H178FvC71X/8+AUW2dSrac4AmEIUOvXC1lLX5QIO7Dss2laNYBZOhFjC1mNF7Tcj+IUkNF2QLIFzeNDCf2m0dBr/z3CJyX4uH/73odKFEmb3ev8Q/LqQOcEKd4r0P1VS3mCnS7r/Q5VAp9/glMm9kWDgNs7G9Bb9y1GAai+DF3RjyLguOkyiX1gg9XOnUKCvoZKKj9tDiqll078u8gcL29QGBWEpdVhfd/Jw8o=
   bucket: ts-demo-lamba-deploys
   local-dir: dist
-  upload-dir: 'no'
   acl: public_read
   on:
     repo: threatstack/threatstack-to-splunk
