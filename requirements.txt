@@ -4,3 +4,4 @@ flask-lambda
 gevent
 gunicorn
 requests
+threatstack
